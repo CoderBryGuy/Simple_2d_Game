@@ -2,6 +2,7 @@ package com.company;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
+import java.util.Random;
 
 public class Game extends Canvas implements Runnable  {
 
@@ -9,9 +10,21 @@ public class Game extends Canvas implements Runnable  {
     public static final int WIDTH = 640, HEIGHT = WIDTH / 12 * 9;
     private Thread thread;
     private boolean running = false;
+    private Handler handler;
+    
+    private Random r;
 
     public Game() {
         new Window(WIDTH, HEIGHT, "Let's Build a Game!", this);
+        handler = new Handler();
+        r = new Random();
+
+        for (int i = 0; i < 50; i++) {
+            handler.addObject(new Player(r.nextInt(WIDTH), r.nextInt(HEIGHT), ID.Player));
+        }
+        
+
+
     }
 
     public static void main(String[] args) {
@@ -73,10 +86,14 @@ public class Game extends Canvas implements Runnable  {
         Graphics g = bs.getDrawGraphics();
         g.setColor(Color.BLACK);
         g.fillRect(0,0, WIDTH, HEIGHT);
+
+        handler.render(g);
+
         g.dispose();
         bs.show();
     }
 
     private void tick() {
+        handler.tick();
     }
 }
