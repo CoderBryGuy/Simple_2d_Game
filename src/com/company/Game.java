@@ -23,8 +23,8 @@ public class Game extends Canvas implements Runnable {
         r = new Random();
 
 
-        handler.addObject(new Player(WIDTH / 2 - 32, HEIGHT / 2 - 32, ID.Player));
-        handler.addObject(new BasicEnemy(r.nextInt(WIDTH -32), r.nextInt(HEIGHT -64), ID.BasicEnemy));
+        handler.addObject(new Player(WIDTH / 2 - 32, HEIGHT / 2 - 32, ID.Player, handler));
+        handler.addObject(new BasicEnemy(r.nextInt(WIDTH -32), r.nextInt(HEIGHT -64), ID.BasicEnemy, handler));
 
     }
 
@@ -67,11 +67,12 @@ public class Game extends Canvas implements Runnable {
             if (running) {
                 render();
                 frames++;
+
             }
 
             if (System.currentTimeMillis() - timer > 1000) {
                 timer += 1000;
-//                System.out.println("FPS: " + frames);
+                System.out.println("FPS: " + frames);
                 frames = 0;
             }
         }
@@ -94,11 +95,13 @@ public class Game extends Canvas implements Runnable {
 
         g.dispose();
         bs.show();
+
     }
 
     private void tick() {
         handler.tick();
         hud.tick();
+
     }
 
     public static int clamp(int var, int min, int max){
