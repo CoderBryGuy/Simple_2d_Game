@@ -12,6 +12,7 @@ public class Game extends Canvas implements Runnable {
     private boolean running = false;
     private Handler handler;
     private HUD hud;
+    private Spawn spawner;
 
     private Random r;
 
@@ -20,11 +21,14 @@ public class Game extends Canvas implements Runnable {
         handler = new Handler();
         this.addKeyListener(new KeyInput(handler));
         hud = new HUD();
+        spawner = new Spawn(handler, hud);
         r = new Random();
 
 
         handler.addObject(new Player(WIDTH / 2 - 32, HEIGHT / 2 - 32, ID.Player, handler));
         handler.addObject(new BasicEnemy(r.nextInt(WIDTH -32), r.nextInt(HEIGHT -64), ID.BasicEnemy, handler));
+
+
 
     }
 
@@ -101,6 +105,7 @@ public class Game extends Canvas implements Runnable {
     private void tick() {
         handler.tick();
         hud.tick();
+        spawner.tick();
 
     }
 

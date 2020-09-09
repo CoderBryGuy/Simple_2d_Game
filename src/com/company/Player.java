@@ -36,16 +36,21 @@ public class Player extends GameObject {
     }
 
     private void collision() {
-        for (int i = 0; i <handler.objects.size() ; i++) {
+        for (int i = 0; i < handler.objects.size(); i++) {
             GameObject tempObject = handler.objects.get(i);
 
-            if(tempObject.getId() == ID.BasicEnemy){
-                if(getBounds().intersects(tempObject.getBounds())){
+            if (tempObject.getId() == ID.BasicEnemy) {
+                if (getBounds().intersects(tempObject.getBounds())) {
                     HUD.HEALTH -= 2;
+                } else if (tempObject.getId() == ID.FastEnemy) {
+                    if (getBounds().intersects(tempObject.getBounds())) {
+                        HUD.HEALTH -= 2;
+                    }
                 }
             }
         }
     }
+
 
     @Override
     public void render(Graphics g) {

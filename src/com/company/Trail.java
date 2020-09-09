@@ -26,8 +26,6 @@ public class Trail extends GameObject {
         }else{
             handler.removeObject(this);
         }
-
-
     }
 
     @Override
