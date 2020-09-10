@@ -31,6 +31,8 @@ public class Player extends GameObject {
         x = Game.clamp(x, 0, Game.WIDTH - 48 );
         y = Game.clamp(y, 0, Game.HEIGHT - 72);
 
+        handler.addObject(new Trail(x,y, ID.Trail, Color.white, 32, 32, 0.08f, handler ));
+
         collision();
 
     }
@@ -46,8 +48,13 @@ public class Player extends GameObject {
                     if (getBounds().intersects(tempObject.getBounds())) {
                         HUD.HEALTH -= 2;
                     }
+                }else if (tempObject.getId() == ID.SmartEnemy) {
+                    if (getBounds().intersects(tempObject.getBounds())) {
+                        HUD.HEALTH -= 2;
+                    }
                 }
             }
+
         }
     }
 
@@ -61,13 +68,13 @@ public class Player extends GameObject {
 //        g2d.draw(getBounds());
 
         g.setColor(Color.white);
-        g.fillRect(x,y,32,32);
+        g.fillRect((int)x,(int)y,32,32);
 
     }
 
     @Override
     public Rectangle getBounds() {
-        return new Rectangle(x,y,32,32);
+        return new Rectangle((int)x, (int)y,32,32);
     }
 
 
