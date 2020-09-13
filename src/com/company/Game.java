@@ -1,5 +1,6 @@
 package com.company;
 
+import javax.swing.plaf.nimbus.State;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.util.Random;
@@ -13,26 +14,35 @@ public class Game extends Canvas implements Runnable {
     private Handler handler;
     private HUD hud;
     private Spawn spawner;
-
     private Random r;
+    private Menu menu;
+
+    public enum STATE{
+        Menu,
+        Game,
+        Help;
+    }
+
+    public STATE gameState = STATE.Menu;
 
     public Game() {
         new Window(WIDTH, HEIGHT, "Let's Build a Game!", this);
         handler = new Handler();
+        menu = new Menu(this, handler);
+        this.addMouseListener(menu);
         this.addKeyListener(new KeyInput(handler));
         hud = new HUD();
         spawner = new Spawn(handler, hud);
+
         r = new Random();
 
-
-        handler.addObject(new Player(WIDTH / 2 - 32, HEIGHT / 2 - 32, ID.Player, handler));
-        handler.addObject(new BasicEnemy(r.nextInt(WIDTH -32), r.nextInt(HEIGHT -64), ID.BasicEnemy, handler));
+        if(gameState == STATE.Game){
+            handler.addObject(new Player(WIDTH / 2 - 32, HEIGHT / 2 - 32, ID.Player, handler));
+            handler.addObject(new BasicEnemy(r.nextInt(WIDTH -32), r.nextInt(HEIGHT -64), ID.BasicEnemy, handler));
 //        handler.addObject(new SmartEnemy(r.nextInt(Game.WIDTH - 32), r.nextInt(Game.HEIGHT - 64), ID.SmartEnemy, handler));
 //        handler.addObject(new Boss1Enemy((float)((Game.WIDTH / 2) - 48) , -120, ID.Boss1Enemy, handler));
-
-
-
-    }
+        }
+   }
 
     public static void main(String[] args) {
         new Game();
@@ -97,7 +107,12 @@ public class Game extends Canvas implements Runnable {
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
         handler.render(g);
-        hud.render(g);
+
+        if(gameState == STATE.Game){
+            hud.render(g);
+        }else if(gameState == STATE.Menu || gameState == STATE.Help){
+            menu.render(g);
+        }
 
         g.dispose();
         bs.show();
@@ -106,8 +121,12 @@ public class Game extends Canvas implements Runnable {
 
     private void tick() {
         handler.tick();
-        hud.tick();
-        spawner.tick();
+        if(gameState == STATE.Game){
+            hud.tick();
+            spawner.tick();
+        }else if(gameState == STATE.Menu){
+            menu.tick();
+        }
 
     }
 
