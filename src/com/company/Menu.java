@@ -10,10 +10,12 @@ public class Menu extends MouseAdapter {
     private Game game;
     private Handler handler;
     private Random r = new Random();
+    private HUD hud;
 
-    public Menu(Game game, Handler handler) {
+    public Menu(Game game, Handler handler, HUD hud) {
         this.game = game;
         this.handler = handler;
+        this.hud = hud;
     }
 
     public void mousePressed(MouseEvent e){
@@ -23,22 +25,31 @@ public class Menu extends MouseAdapter {
         //play btn
         if(mouseOver(mX, mY,210,150,200,64 )){
             System.out.println("mouse pressed in play button");
-            System.out.println("window width is " + Window.WIDTH + " window height is " + Window.HEIGHT);
+            System.out.println("window width is " + Game.WIDTH + " window height is " + Game.HEIGHT);
+
             game.gameState = Game.STATE.Game;
             handler.addObject(new Player(Game.WIDTH / 2 - 32, Game.HEIGHT / 2 - 32, ID.Player, handler));
+            handler.clearEnemies();
             handler.addObject(new BasicEnemy(r.nextInt(Game.WIDTH -32), r.nextInt(Game.HEIGHT -64), ID.BasicEnemy, handler));
 
         }
 
         //quit button
         if(mouseOver(mX, mY,210,350,200,64 )){
-            System.exit(1);
+            if(game.gameState == Game.STATE.Menu) {
+                System.exit(1);
+            }
         }
 
         //help button
         if(mouseOver(mX, mY,210, 250, 200, 64 )){
-            game.gameState = Game.STATE.Help;
+            if(game.gameState == Game.STATE.Menu) {
+                game.gameState = Game.STATE.Help;
+            }else if(game.gameState == Game.STATE.Help) {
+                game.gameState = Game.STATE.Menu;
+            }
         }
+
     }
 
     public void mouseReleased(MouseEvent e){
@@ -68,7 +79,7 @@ public class Menu extends MouseAdapter {
 
             g.setFont(fnt);
             g.setColor(Color.white);
-            g.drawString("Menu", 230, 70);
+            g.drawString("WAVE", 230, 70);
 
 
             g.setFont(fnt2);
@@ -84,11 +95,35 @@ public class Menu extends MouseAdapter {
             g.drawString("Quit", 270, 390);
         }else if(game.gameState == Game.STATE.Help){
             Font fnt = new Font("arial", 1, 50);
+            Font fnt2 = new Font("arial", 1, 30);
+            Font fnt3 = new Font("arial", 1, 20);
 
 
             g.setFont(fnt);
             g.setColor(Color.white);
-            g.drawString("Help", 270, 290);
+            g.drawString("Help", 250, 70);
+
+            g.setFont(fnt3);
+            g.drawString("Use WASD keys to move player and dodge enemies", 70, 150);
+
+            g.setFont(fnt2);
+            g.drawRect(210, 250, 200, 64);
+            g.drawString("Back", 270, 290);
+        }else if(game.gameState == Game.STATE.End){
+            Font fnt = new Font("arial", 1, 50);
+            Font fnt2 = new Font("arial", 1, 30);
+            Font fnt3 = new Font("arial", 1, 20);
+
+            g.setFont(fnt);
+            g.setColor(Color.white);
+            g.drawString("Game Over", 250, 70);
+
+            g.setFont(fnt3);
+            g.drawString("You lost. Your score was: " + hud.getScore(), 70, 150);
+
+            g.setFont(fnt2);
+            g.drawRect(210, 250, 200, 64);
+            g.drawString("Try Again", 270, 290);
         }
 
     }

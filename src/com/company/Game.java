@@ -20,18 +20,19 @@ public class Game extends Canvas implements Runnable {
     public enum STATE{
         Menu,
         Game,
-        Help;
+        Help,
+        End;
     }
 
-    public STATE gameState = STATE.Menu;
+    public static STATE gameState = STATE.Menu;
 
     public Game() {
         new Window(WIDTH, HEIGHT, "Let's Build a Game!", this);
         handler = new Handler();
-        menu = new Menu(this, handler);
+        hud = new HUD();
+        menu = new Menu(this, handler, hud);
         this.addMouseListener(menu);
         this.addKeyListener(new KeyInput(handler));
-        hud = new HUD();
         spawner = new Spawn(handler, hud);
 
         r = new Random();
@@ -41,6 +42,10 @@ public class Game extends Canvas implements Runnable {
             handler.addObject(new BasicEnemy(r.nextInt(WIDTH -32), r.nextInt(HEIGHT -64), ID.BasicEnemy, handler));
 //        handler.addObject(new SmartEnemy(r.nextInt(Game.WIDTH - 32), r.nextInt(Game.HEIGHT - 64), ID.SmartEnemy, handler));
 //        handler.addObject(new Boss1Enemy((float)((Game.WIDTH / 2) - 48) , -120, ID.Boss1Enemy, handler));
+        }else{
+            for (int i = 0; i < 10; i++) {
+                handler.addObject(new MenuParticle(r.nextInt(WIDTH -32), r.nextInt(HEIGHT -64), ID.MenuParticle, handler));
+            }
         }
    }
 
@@ -110,7 +115,7 @@ public class Game extends Canvas implements Runnable {
 
         if(gameState == STATE.Game){
             hud.render(g);
-        }else if(gameState == STATE.Menu || gameState == STATE.Help){
+        }else if(gameState == STATE.Menu || gameState == STATE.Help || gameState == STATE.End){
             menu.render(g);
         }
 
@@ -124,7 +129,15 @@ public class Game extends Canvas implements Runnable {
         if(gameState == STATE.Game){
             hud.tick();
             spawner.tick();
-        }else if(gameState == STATE.Menu){
+
+            if(HUD.HEALTH <= 0){
+                HUD.HEALTH = 100;
+                gameState = STATE.End;
+                handler.clearEnemies();
+
+            }
+
+        }else if(gameState == STATE.Menu || gameState == STATE.End){
             menu.tick();
         }
 

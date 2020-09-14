@@ -48,7 +48,6 @@ public class Boss1Enemy extends GameObject {
                handler.addObject(new Boss1Bullet((int)x + 48, (int)y + 48, ID.BasicEnemy, handler));
            }
 
-
         }
 
 
