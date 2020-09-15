@@ -1,7 +1,8 @@
 package com.company;
 
-import javax.swing.plaf.nimbus.State;
 import java.awt.*;
+
+
 import java.awt.image.BufferStrategy;
 import java.util.Random;
 
@@ -27,8 +28,8 @@ public class Game extends Canvas implements Runnable {
     public static STATE gameState = STATE.Menu;
 
     public Game() {
-        new Window(WIDTH, HEIGHT, "Let's Build a Game!", this);
         handler = new Handler();
+        new Window(WIDTH, HEIGHT, "Let's Build a Game!", this);
         hud = new HUD();
         menu = new Menu(this, handler, hud);
         this.addMouseListener(menu);
@@ -132,8 +133,12 @@ public class Game extends Canvas implements Runnable {
 
             if(HUD.HEALTH <= 0){
                 HUD.HEALTH = 100;
+                hud.setLevel(1);
                 gameState = STATE.End;
                 handler.clearEnemies();
+                for (int i = 0; i < 10; i++) {
+                    handler.addObject(new MenuParticle(r.nextInt(WIDTH -32), r.nextInt(HEIGHT -64), ID.MenuParticle, handler));
+                }
 
             }
 

@@ -43,6 +43,7 @@ public class KeyInput extends KeyAdapter {
                    }
 
                    if(key == KeyEvent.VK_H) HUD.HEALTH = 100;
+                   if(key == KeyEvent.VK_P) HUD.HEALTH = 0;
 
                }
         }
