@@ -34,6 +34,8 @@ public class Game extends Canvas implements Runnable {
         menu = new Menu(this, handler, hud);
         this.addMouseListener(menu);
         this.addKeyListener(new KeyInput(handler));
+        AudioPlayer.load();
+
         spawner = new Spawn(handler, hud);
 
         r = new Random();
